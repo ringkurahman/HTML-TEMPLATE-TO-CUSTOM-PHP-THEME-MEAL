@@ -2,7 +2,7 @@
  common scripts
  --------------------------------------------- */
 
-;(function () {
+;(function ($) {
 
     "use strict"; // use strict to start
 
