@@ -6,6 +6,7 @@ require_once get_theme_file_path( '/lib/csf/cs-framework.php' );
 require_once get_theme_file_path( '/inc/metaboxes/section.php' );
 require_once get_theme_file_path( "/inc/metaboxes/page.php" );
 require_once get_theme_file_path( "/inc/metaboxes/section-banner.php" );
+require_once get_theme_file_path( "/inc/metaboxes/section-featured.php" );
 
 
 
@@ -147,3 +148,17 @@ function meal_codestar_init() {
 }
 
 add_action( 'init', 'meal_codestar_init' );
+
+
+
+// Function for Recipe Category
+function get_recipe_category( $recipe_id ) {
+	$terms = wp_get_post_terms( $recipe_id, "category" );
+	if ( $terms ) {
+		$first_term = array_shift( $terms );
+
+		return $first_term->name;
+	}
+
+	return "Food";
+}

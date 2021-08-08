@@ -16,9 +16,9 @@ $meal_section_description = $meal_section->post_content;
         <div class="container">
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10" data-aos="fade-up">
-                    <h2 class="heading mb-5">
+                    <h1 class="heading mb-5">
                         <?php echo esc_html($meal_section_meta['banner_title']) ?>
-                    </h2>
+                    </h1>
                     <p class="sub-heading mb-5">
                         <?php echo esc_html($meal_section_meta['banner_desc']) ?>
                     </p>
