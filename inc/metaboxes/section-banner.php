@@ -29,6 +29,16 @@ function meal_banner_section_metabox($metaboxes){
                 'icon'   => 'fa fa-image',
                 'fields' => array(
                     array(
+                        'id'    => 'banner_title',
+                        'title'   => __( 'Banner Title', 'meal' ),
+                        'type'    => 'text',
+                    ),
+                    array(
+                        'id'    => 'banner_desc',
+                        'title'   => __( 'Banner Description', 'meal' ),
+                        'type'    => 'textarea',
+                    ),
+                    array(
                         'id'    => 'banner_image',
                         'title'   => __( 'Banner Image', 'meal' ),
                         'type'    => 'image',
@@ -37,7 +47,8 @@ function meal_banner_section_metabox($metaboxes){
                         'id'    => 'button_title',
                         'title'   => __( 'Button Title', 'meal' ),
                         'type'    => 'text',
-                    ),array(
+                    ),
+                    array(
                         'id'    => 'button_target',
                         'title'   => __( 'Button Target', 'meal' ),
                         'type'    => 'text',

@@ -17,18 +17,12 @@ $meal_section_description = $meal_section->post_content;
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-md-10" data-aos="fade-up">
                     <h2 class="heading mb-5">
-                        <?php
-                        echo esc_html( $meal_section_title );
-                        ?>
+                        <?php echo esc_html($meal_section_meta['banner_title']) ?>
                     </h2>
                     <p class="sub-heading mb-5">
-                        <?php echo wp_kses_post($meal_section_description); ?>
+                        <?php echo esc_html($meal_section_meta['banner_desc']) ?>
                     </p>
-                    <?php
-                    /*$description = apply_filters('the_content', $meal_section_description );
-                    $description = str_replace('<p','<p class="sub-heading mb-5"',$description);
-                    echo wp_kses_post($description);*/
-                    ?>
+
                     <p>
                         <a href="<?php echo esc_url($meal_section_meta['button_target']) ?>" class="smoothscroll btn btn-outline-white px-5 py-3">
                             <?php echo esc_html($meal_section_meta['button_title']) ?>
