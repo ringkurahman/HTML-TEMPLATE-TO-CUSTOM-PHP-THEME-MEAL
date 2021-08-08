@@ -1,11 +1,26 @@
 <?php
 
 
+// Theme Internal File Load
+require_once get_theme_file_path( '/lib/csf/cs-framework.php' );
+require_once get_theme_file_path( '/inc/metaboxes/section.php' );
+
+
+
+// For Development Avoid Caching
 if ( site_url() == "http://meal.loca.com" ) {
 	define( "VERSION", time() );
 } else {
 	define( "VERSION", wp_get_theme()->get( "Version" ) );
 }
+
+
+// Codestar Framework
+define( 'CS_ACTIVE_FRAMEWORK', true ); // default true
+define( 'CS_ACTIVE_METABOX', true ); // default true
+define( 'CS_ACTIVE_TAXONOMY', true ); // default true
+define( 'CS_ACTIVE_SHORTCODE', false ); // default true
+define( 'CS_ACTIVE_CUSTOMIZE', false ); // default true
 
 
 // After Theme Setup Start
@@ -119,3 +134,14 @@ EOD;
 
 add_action( 'wp_enqueue_scripts', 'meal_assets' );
 // Load CSS and JavaScript Files End
+
+
+
+// Codestar Framework Initialization
+function meal_codestar_init() {
+	CSFramework_Metabox::instance( array() );
+	CSFramework_Taxonomy::instance( array() );
+
+}
+
+add_action( 'init', 'meal_codestar_init' );
