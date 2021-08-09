@@ -167,3 +167,36 @@ function get_recipe_category( $recipe_id ) {
 
 	return "Food";
 }
+
+
+
+// Reservation Hook
+function meal_process_reservation() {
+
+	if ( check_ajax_referer( 'reservation', 'rn' ) ) {
+		$name    = sanitize_text_field( $_POST['name'] );
+		$email   = sanitize_text_field( $_POST['email'] );
+		$persons = sanitize_text_field( $_POST['persons'] );
+		$phone   = sanitize_text_field( $_POST['phone'] );
+		$date    = sanitize_text_field( $_POST['date'] );
+		$time    = sanitize_text_field( $_POST['time'] );
+
+		$data = array(
+			'name'    => $name,
+			'email'   => $email,
+			'phone'   => $phone,
+			'persons' => $persons,
+			'date'    => $date,
+			'time'    => $time
+		);
+		//print_r( $data );
+
+
+	} else {
+		echo 'Not allowed';
+	}
+	die();
+}
+
+add_action( 'wp_ajax_reservation', 'meal_process_reservation' );
+add_action( 'wp_ajax_nopriv_reservation', 'meal_process_reservation' );
