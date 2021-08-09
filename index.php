@@ -11,7 +11,7 @@ $meal_section_id = 20;
 get_template_part( "section-templates/gallery" );
 
 $meal_section_id = 35;
-get_template_part( "section-templates/menu" );
+get_template_part( "section-templates/recipe-menu" );
 
 $meal_section_id = 33;
 get_template_part( "section-templates/services" );
