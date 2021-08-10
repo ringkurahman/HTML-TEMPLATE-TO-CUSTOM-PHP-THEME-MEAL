@@ -55,6 +55,7 @@ add_action( 'after_setup_theme', 'meal_theme_setup' );
 
 // Load CSS and JavaScript Files Start
 function meal_assets() {
+  // CSS Files
 	wp_enqueue_style( 'meal-fonts', '//fonts.googleapis.com/css?family=Playfair+Display:300,400,700,800|Open+Sans:300,400,700"' );
 	wp_enqueue_style( 'bootstrap-css', get_template_directory_uri() . '/assets/css/bootstrap.css', null, VERSION );
 	wp_enqueue_style( 'animate-css', get_template_directory_uri() . '/assets/css/animate.css', null, VERSION );
@@ -70,6 +71,7 @@ function meal_assets() {
 	wp_enqueue_style( 'meal-style-css', get_template_directory_uri() . '/assets/css/style.css', null, VERSION );
 	wp_enqueue_style( 'meal-style', get_stylesheet_uri() );
 
+  // JavaScript Files
 	wp_enqueue_script( 'popper-js', get_template_directory_uri() . '/assets/js/popper.min.js', array( 'jquery' ), VERSION, true );
 	wp_enqueue_script( 'bootstrap-js', get_template_directory_uri() . '/assets/js/bootstrap.min.js', array( 'jquery' ), VERSION, true );
 	wp_enqueue_script( 'owl.carousel-js', get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ), VERSION, true );
@@ -128,11 +130,12 @@ EOD;
 
 	wp_enqueue_script( 'meal-main-js', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), VERSION, true );
 
-
+// Conditionally Load Files on landing.php Template
 	if ( is_page_template( 'page-templates/landing.php' ) ) {
 		wp_enqueue_script( 'meal-reservation-js', get_template_directory_uri() . '/assets/js/reservation.js', array( 'jquery' ), VERSION, true );
 		wp_enqueue_script( 'meal-contact-js', get_template_directory_uri() . '/assets/js/contact.js', array( 'jquery' ), VERSION, true );
 		$ajaxurl = admin_url( 'admin-ajax.php' );
+    // Send Data Throw Ajax URL
 		wp_localize_script( 'meal-reservation-js', 'mealurl', array( 'ajaxurl' => $ajaxurl ) );
 		wp_localize_script( 'meal-contact-js', 'mealurl', array( 'ajaxurl' => $ajaxurl ) );
 		wp_localize_script( 'meal-portfolio-js', 'mealurl', array( 'ajaxurl' => $ajaxurl ) );
@@ -341,3 +344,49 @@ function meal_admin_scripts( $screen ) {
 }
 
 add_action( 'admin_enqueue_scripts', 'meal_admin_scripts' );
+
+
+
+// Contact Mail Setup
+function meal_contact_email() {
+	if ( check_ajax_referer( 'contact', 'cn' ) ) {
+		$name    = isset( $_POST['name'] ) ? $_POST['name'] : '';
+		$email   = isset( $_POST['email'] ) ? $_POST['email'] : '';
+		$phone   = isset( $_POST['phone'] ) ? $_POST['phone'] : '';
+		$message = isset( $_POST['message'] ) ? $_POST['message'] : '';
+
+		$_message    = sprintf( "%s \nFrom: %s\nEmail: %s\nPhone: %s", $message, $name, $email, $phone );
+		$admin_email = get_option( 'admin_email' );
+
+		//postfix
+
+		wp_mail( 'contact@howtomycar.com', __( 'Someone tried to contact you', 'meal' ), $_message, "From: SALT Restaurant\r\n" );
+		die( 'successful' );
+	}
+	die( 'error' );
+}
+
+add_action( 'wp_ajax_contact', 'meal_contact_email' );
+add_action( 'wp_ajax_nopriv_contact', 'meal_contact_email' );
+
+
+
+// Conditionally Load Menu on front-page
+function meal_change_nav_menu( $menus ) {
+	$string_to_replace = home_url( "/" ) . "section/";
+	if ( is_front_page() ) {
+		foreach ( $menus as $menu ) {
+			$new_url = str_replace( $string_to_replace, "#", $menu->url );
+
+			if ( $new_url != $menu->url ) {
+				$new_url = rtrim( $new_url, "/" );
+			}
+
+			$menu->url = $new_url;
+		}
+	}
+
+	return $menus;
+}
+
+add_filter( 'wp_nav_menu_objects', 'meal_change_nav_menu' );
