@@ -7,31 +7,24 @@
 ?>
 
 <?php
-
-get_header();
-$meal_section_id = 6;
-get_template_part( "section-templates/banner" );
-
-$meal_section_id = 7;
-get_template_part( "section-templates/featured" );
-
-$meal_section_id = 20;
-get_template_part( "section-templates/gallery" );
-
-$meal_section_id = 35;
-get_template_part( "section-templates/recipe-menu" );
-
-$meal_section_id = 33;
-get_template_part( "section-templates/services" );
-
-$meal_section_id = 30;
-get_template_part( "section-templates/chef" );
-
-$meal_section_id = 36;
-get_template_part( "section-templates/reservation" );
-
-
+    get_header();
 ?>
+
+
+    <?php
+        // Get Section Dynamically
+        $meal_current_page_id = get_the_ID();
+        $meal_page_meta       = get_post_meta( $meal_current_page_id, 'meal-page-sections', true );
+        if ( isset( $meal_page_meta['sections'] ) ):  // Custom Post Type ID [sections] in page.php
+            foreach ( $meal_page_meta['sections'] as $meal_page_section ):
+                $meal_section_id   = $meal_page_section['section'];  // New Section ID [section] in page.php
+                $meal_section_meta = get_post_meta( $meal_section_id, 'meal-section-type', true );
+                $meal_section_type = $meal_section_meta['type'];  // Section Meta ID[type] in section.php
+                get_template_part( "section-templates/{$meal_section_type}" );
+            endforeach;
+        endif;
+    ?>
+
         <div class="section bg-white" data-aos="fade-up">
             <div class="container">
                 <div class="row section-heading justify-content-center mb-5">

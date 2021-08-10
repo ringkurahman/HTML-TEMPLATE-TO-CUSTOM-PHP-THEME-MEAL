@@ -323,7 +323,7 @@ add_filter( 'woocommerce_order_status_processing', 'meal_order_status_processing
 function meal_change_menu( $menu ) {
 	$reservation_count = get_transient( 'res_count' ) ? get_transient( 'res_count' ) : 0;
 	if ( $reservation_count > 0 ) {
-		$menu[4][0] = "Reservation <span class='awaiting-mod'>{$reservation_count}</span> "; // Menu Position 5[0]
+		$menu[4][0] = "Reservation <span class='awaiting-mod'>{$reservation_count}</span> "; // Menu Position 4[0]
 	}
 
 	return $menu;
