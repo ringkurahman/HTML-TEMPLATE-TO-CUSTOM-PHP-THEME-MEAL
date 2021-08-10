@@ -25,7 +25,7 @@ $meal_section_description = $meal_section->post_content;
 
         <!-- Ajax nonce -->
 					<?php
-					wp_nonce_field('reservation','rn');
+				  	wp_nonce_field('reservation','rn');
 					?>
 
 					<div class="row mb-4">
