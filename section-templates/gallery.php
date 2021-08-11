@@ -107,7 +107,7 @@ foreach ( $meal_gallery_items as $meal_gallery_item ) {
                     ?>
 
                 </div>
-                <!-- <button id="loadmorepb"><?php _e( 'Load More', 'meal' ); ?></button> -->
+                <button id="loadmorepb"><?php _e( 'Load More', 'meal' ); ?></button>
 
             </div>
         </div>

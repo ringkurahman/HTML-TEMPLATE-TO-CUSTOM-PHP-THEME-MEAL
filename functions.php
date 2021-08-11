@@ -149,14 +149,69 @@ add_action( 'wp_enqueue_scripts', 'meal_assets' );
 
 
 
-// Codestar Framework Initialization
+// Codestar Framework  and Theme Option
 function meal_codestar_init() {
 	CSFramework_Metabox::instance( array() );
 	CSFramework_Taxonomy::instance( array() );
 
+  $settings = array(
+		'menu_title'      => __( 'Meal Options', 'meal' ),
+		'menu_type'       => 'submenu',
+		'menu_parent'     => 'themes.php',
+		'menu_slug'       => 'meal_option_panel',
+		'framework_title' => __( 'Meal Options', 'meal' ),
+		'menu_icon'       => 'dashicons-dashboard',
+		'menu_position'   => 20,
+		'ajax_save'       => false,
+		'show_reset_all'  => true
+	);
+
+	new CSFramework( $settings, meal_get_theme_options() );
+
 }
 
 add_action( 'init', 'meal_codestar_init' );
+
+
+
+// Theme Verification
+function meal_get_theme_options() {
+	$options   = array();
+	$options[] = array(
+		'name'   => 'meal_theme_activation',
+		'title'  => __( 'Theme Activation', 'meal' ),
+		'icon'   => 'fa fa-heart',
+		'fields' => array(
+			array(
+				'id'    => 'meal_username',
+				'type'  => 'text',
+				'title' => __( 'Username', 'meal' ),
+			),
+			array(
+				'id'    => 'meal_purchase_code',
+				'type'  => 'text',
+				'title' => __( 'Purchase Code', 'meal' ),
+			),
+		)
+	);
+
+	$username      = cs_get_option( 'meal_username' );
+	$purchase_code = cs_get_option( 'meal_purchase_code' );
+	$token         = get_option( 'meal_theme_token' );
+
+	if ( get_option( 'meal_theme_activation' ) == 1 ) {
+
+		$theme_demo_url                               = "http://secure.meal.com/deliver.php?u={$username}&pc={$purchase_code}&token={$token}&file=theme-demo";
+		$options[ count( $options ) - 1 ]['fields'][] = array(
+			'id'      => 'meal_download_file',
+			'type'    => 'notice',
+			'class'   => 'success',
+			'content' => "Download <a target='_blank' href='{$theme_demo_url}'>From Here</a> ",
+		);
+	}
+
+	return $options;
+}
 
 
 
@@ -433,3 +488,58 @@ function get_max_page_number() {
 
 	return $wp_query->max_num_pages;
 }
+
+
+
+// Load More Image Action Hook
+function meal_load_portfolio_items() {
+	if ( wp_verify_nonce( $_POST['nonce'], 'loadmorep' ) ) {
+		$meal_section_id       = $_POST['sid'];
+		$meal_offset       = $_POST['offset'];
+		$meal_section_meta     = get_post_meta( $meal_section_id, 'meal-section-gallery', true );
+		$meal_number_of_images = $meal_section_meta['nimages'];
+		$meal_gallery_items = $meal_section_meta['portfolio'];
+		$meal_gallery_items = array_slice($meal_gallery_items,$meal_offset);
+		$meal_counter       = 0;
+		echo "<div class='portfolio'>";
+		foreach ( $meal_gallery_items as $meal_gallery_item ):
+			if ( $meal_counter >= $meal_number_of_images ) {
+				break;
+			}
+			$meal_item_class            = str_replace( ",", " ", $meal_gallery_item['categories'] );
+			$meal_item_image_id         = $meal_gallery_item['image'];
+			$meal_item_thumbnail        = wp_get_attachment_image_src( $meal_item_image_id, 'medium' );
+			$meal_item_large            = wp_get_attachment_image_src( $meal_item_image_id, 'large' );
+			$meal_item_categories_array = explode( ",", $meal_gallery_item['categories'] );
+			?>
+
+            <div class="portfolio-item <?php echo esc_attr( $meal_item_class ); ?>">
+                <a href="<?php echo esc_url( $meal_item_large[0] ); ?>"
+                   class="portfolio-image popup-gallery">
+                    <img src="<?php echo esc_url( $meal_item_thumbnail[0] ); ?>" alt=""/>
+                    <div class="portfolio-hover-title">
+                        <div class="portfolio-content">
+                            <h4><?php echo esc_html( $meal_gallery_item['title'] ) ?></h4>
+                            <div class="portfolio-category">
+								<?php
+								foreach ( $meal_item_categories_array as $meal_item_category ):
+									printf( "<span>%s</span>", trim( $meal_item_category ) );
+								endforeach;
+								?>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+			<?php
+			$meal_counter ++;
+		endforeach;
+		echo "</div>";
+	}
+
+	die();
+
+}
+
+add_action( 'wp_ajax_loadmorep', 'meal_load_portfolio_items' );
+add_action( 'wp_ajax_nopriv_loadmorep', 'meal_load_portfolio_items' );
