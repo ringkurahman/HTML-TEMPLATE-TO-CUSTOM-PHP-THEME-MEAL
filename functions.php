@@ -96,6 +96,7 @@ function meal_assets() {
 	), VERSION, true );
 
 
+  // Mailchimp Integration
 	if ( is_page_template( 'page-templates/mailchimp.php' ) ) {
 		wp_enqueue_style( 'mailchimp-css', '//cdn-images.mailchimp.com/embedcode/classic-10_7.css' );
 		$style = <<<EOD
@@ -423,3 +424,12 @@ function meal_process_pricing_item( $item ) {
 }
 
 add_filter( 'meal_pricing_item', 'meal_process_pricing_item' );
+
+
+
+// Load More Page Function
+function get_max_page_number() {
+	global $wp_query;
+
+	return $wp_query->max_num_pages;
+}
