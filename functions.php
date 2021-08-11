@@ -5,6 +5,7 @@
 require_once get_theme_file_path( '/lib/csf/cs-framework.php' );
 require_once get_theme_file_path( '/inc/metaboxes/section.php' );
 require_once get_theme_file_path( "/inc/metaboxes/page.php" );
+require_once get_theme_file_path( "/inc/metaboxes/pricing.php" );
 require_once get_theme_file_path( "/inc/metaboxes/section-banner.php" );
 require_once get_theme_file_path( "/inc/metaboxes/section-featured.php" );
 require_once get_theme_file_path( "/inc/metaboxes/section-gallery.php" );
@@ -390,3 +391,35 @@ function meal_change_nav_menu( $menus ) {
 }
 
 add_filter( 'wp_nav_menu_objects', 'meal_change_nav_menu' );
+
+
+
+// Unset Comment field textarea and Register Again
+function meal_comment_form_fields( $fields ) {
+	/*echo "<pre>";
+	print_r($fields);
+	echo "</pre>";*/
+
+	$comment_field = $fields['comment'];
+	unset( $fields['comment'] );
+	$fields['comment'] = $comment_field;
+
+	return $fields;
+}
+
+add_filter( 'comment_form_fields', 'meal_comment_form_fields' );
+
+
+
+// Pricing Table 1=Tik 0=null
+function meal_process_pricing_item( $item ) {
+	if ( trim( $item ) == '1' ) {
+		return '<i class="fa fa-check plan-active-color fa-2x">';
+	}else if ( trim( $item ) == '0' ) {
+		return '<i class="fa fa-ellipsis-h plan-inactive-color fa-2x">';
+	}
+
+	return $item;
+}
+
+add_filter( 'meal_pricing_item', 'meal_process_pricing_item' );
